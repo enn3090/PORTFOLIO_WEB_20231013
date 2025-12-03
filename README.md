@@ -16,6 +16,8 @@ LocalStorage로 여러 사용자 구분하기
 로그인한 사용자 정보로 게시글 작성자 표시
 로그인/로그아웃 기능
 회원가입 기능
+![회원가입 화면](https://github.com/user-attachments/assets/331a30a3-4dea-4710-a298-1658c9291fcb)
+![로그인 화면](https://github.com/user-attachments/assets/96227269-8efc-4c81-84c5-9a24196e7a16)
 
 3. 파일 첨부 기능
 게시글에 파일 첨부할 수 있게 구현
@@ -31,20 +33,26 @@ Bootstrap으로 반응형 포트폴리오 메인 페이지 제작
 홈으로 돌아가기 버튼 구현
 ![상세소개 페이지 UI](https://github.com/user-attachments/assets/1085f021-d5b9-4956-a863-0a50b94561a3)
 
-6. 프로젝트 데모 페이지 ![프로젝트 데모 페이지](https://github.com/user-attachments/assets/a353e5a2-50be-4b3b-9a1b-6bc787cf8340)
+6. 프로젝트 데모 페이지
+![프로젝트 데모 페이지](https://github.com/user-attachments/assets/a353e5a2-50be-4b3b-9a1b-6bc787cf8340)
    
-7. 스킬 & 경험 페이지 ![스킬 & 경험 페이지](https://github.com/user-attachments/assets/55cbd4be-5cc9-491a-b6e4-ee1b1b0f88ed)
+7. 스킬 & 경험 페이지
+![스킬 & 경험 페이지](https://github.com/user-attachments/assets/55cbd4be-5cc9-491a-b6e4-ee1b1b0f88ed)
 
-8.나의 프로젝트 페이지  ![나의 프로젝트 페이지](https://github.com/user-attachments/assets/9b0e441d-283e-4c85-91bd-8819f02b42c6)
+8.나의 프로젝트 페이지  
+![나의 프로젝트 페이지](https://github.com/user-attachments/assets/9b0e441d-283e-4c85-91bd-8819f02b42c6)
 
 9. 메일 보내기 버튼 구현
 ![메일 보내기](https://github.com/user-attachments/assets/053bd84b-5206-409e-a14c-358102dc8d72)
 ![메일 보내기2](https://github.com/user-attachments/assets/40380d73-092c-4f1b-87c6-1f7e09383c3e)
 
-10. ![지도 삽입 완료](https://github.com/user-attachments/assets/57827982-8369-4162-a9f2-94191e54cb32)
+10.지도 삽입 완료
+![지도 삽입 완료](https://github.com/user-attachments/assets/57827982-8369-4162-a9f2-94191e54cb32)
 
+- 프로젝트에 사용된 기술 스택
 ![프로젝트에 사용된 기술 스택](https://github.com/user-attachments/assets/a2921a91-76bc-4153-a4dd-f8afc9d5aec8)
 
+- 주차별 학습 및 개발 과정
 ![주차별 학습 및 개발 과정](https://github.com/user-attachments/assets/3d7e4bff-4032-46be-b08b-ebe1b6703675)
 
 배운 점과 어려웠던 점
