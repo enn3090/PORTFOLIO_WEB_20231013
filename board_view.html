@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <title>게시글 상세 내용</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="img/favicon.ico" rel="icon">
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -27,12 +28,12 @@
           </thead>
           <tbody>
             <tr>
-              <td th:text="${board.id}"></td>
-              <td th:text="${board.title}"></td>
-              <td th:text="${board.username}"></td>
-              <td th:text="${board.newdate}"></td>
-              <td th:text="${board.viewcount}"></td>
-              <td th:text="${board.likecount}"></td>
+              <td id="view-id"></td>
+              <td id="view-title"></td>
+              <td id="view-username"></td>
+              <td id="view-date"></td>
+              <td id="view-viewcount"></td>
+              <td id="view-likecount"></td>
             </tr>
           </tbody>
         </table>
@@ -47,32 +48,80 @@
           </thead>
           <tbody>
             <tr>
-              <td th:text="${board.content}" style="min-height: 150px"></td>
+              <td id="view-content" style="min-height: 150px; white-space: pre-wrap;"></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div
-        class="mt-3 d-flex justify-content-end"
-        th:if="${loginUser != null and loginUser == board.username}"
-      >
-        <a class="btn btn-warning" th:href="@{/board_edit/{id}(id=${board.id})}"
-          >수정</a
-        >
+      <div class="mt-3 d-flex justify-content-end">
+        <button id="btn-edit" class="btn btn-warning">수정</button>
 
-        <form
-          th:action="@{/api/board_delete/{id}(id=${board.id})}"
-          method="post"
-          style="display: inline; margin-left: 10px"
-        >
-          <input type="hidden" name="_method" value="delete" />
-          <button type="submit" class="btn btn-danger">삭제</button>
-        </form>
+        <button onclick="deletePost()" class="btn btn-danger" style="margin-left: 10px;">삭제</button>
       </div>
+      
       <div class="mt-3">
-        <a href="/board_list" class="btn btn-secondary">목록으로</a>
+        <a href="board_list.html" class="btn btn-secondary">목록으로</a>
       </div>
     </div>
+
+    <script>
+      // 1. 화면이 열리면 실행
+      window.onload = function() {
+        // 주소창에서 글 번호(id) 가져오기 (예: board_view.html?id=1)
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = parseInt(urlParams.get('id'));
+
+        // 저장소에서 글 목록 가져오기
+        let posts = JSON.parse(localStorage.getItem('myBoardPosts')) || [];
+        
+        // 해당 ID의 글 찾기
+        const board = posts.find(p => p.id === id);
+
+        if (board) {
+          // 조회수 1 증가 (간단한 로직)
+          board.viewcount = (board.viewcount || 0) + 1;
+          localStorage.setItem('myBoardPosts', JSON.stringify(posts));
+
+          // 화면에 데이터 뿌리기 (th:text 대신 사용)
+          document.getElementById('view-id').innerText = board.id;
+          document.getElementById('view-title').innerText = board.title;
+          document.getElementById('view-username').innerText = board.username;
+          document.getElementById('view-date').innerText = board.newdate;
+          document.getElementById('view-viewcount').innerText = board.viewcount;
+          document.getElementById('view-likecount').innerText = board.likecount || 0;
+          document.getElementById('view-content').innerText = board.content;
+
+          // 수정 버튼 클릭 시 이동할 주소 설정
+          document.getElementById('btn-edit').onclick = function() {
+            location.href = 'board_edit.html?id=' + board.id;
+          };
+
+        } else {
+          alert("삭제되었거나 존재하지 않는 게시글입니다.");
+          location.href = "board_list.html";
+        }
+      };
+
+      // 2. 삭제 함수
+      function deletePost() {
+        if (!confirm("정말 삭제하시겠습니까?")) {
+          return;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = parseInt(urlParams.get('id'));
+        let posts = JSON.parse(localStorage.getItem('myBoardPosts')) || [];
+
+        // 해당 글만 빼고 나머지로 새 목록 만들기 (필터링)
+        const newPosts = posts.filter(p => p.id !== id);
+
+        // 다시 저장하기
+        localStorage.setItem('myBoardPosts', JSON.stringify(newPosts));
+
+        alert("삭제되었습니다.");
+        location.href = "board_list.html";
+      }
+    </script>
   </body>
 </html>

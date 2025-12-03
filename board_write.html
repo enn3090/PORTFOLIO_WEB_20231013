@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <title>블로그 게시판 - 글쓰기</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="img/favicon.ico" rel="icon">
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -13,14 +14,14 @@
     <div class="container">
       <div class="mt-4">
         <h2>게시글 추가(제목과 내용 입력)</h2>
-        <form th:action="@{/api/boards}" method="post" name="content">
+        
+        <form onsubmit="savePost(event)">
           <div class="form-group">
             <label for="title">제목: </label>
             <input
               type="text"
               class="form-control"
               id="title"
-              name="title"
               required
             />
           </div>
@@ -29,19 +30,62 @@
             <textarea
               class="form-control"
               id="content"
-              name="content"
-              rows="5"
+              rows="10"
               required
             ></textarea>
           </div>
 
-          <input type="hidden" id="username" name="username" value="GUEST" />
-          <input type="hidden" id="newdate" name="newdate" value="오늘날짜" />
-          <input type="hidden" id="viewcount" name="viewcount" value="0" />
-          <input type="hidden" id="likecount" name="likecount" value="0" />
-          <button type="submit" class="btn btn-primary">글 저장하기</button>
+          <input type="hidden" id="username" value="방문자" />
+
+          <div class="mt-3">
+            <button type="submit" class="btn btn-primary">글 저장하기</button>
+            <a href="board_list.html" class="btn btn-secondary">취소</a>
+          </div>
         </form>
       </div>
     </div>
+
+    <script>
+      function savePost(event) {
+        event.preventDefault(); // 페이지 새로고침 방지
+
+        // 1. 입력한 내용 가져오기
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const username = document.getElementById('username').value;
+        
+        // 2. 오늘 날짜 생성 (YYYY-MM-DD)
+        const dateObj = new Date();
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const newdate = `${year}-${month}-${day}`;
+
+        // 3. 기존 글 목록 불러오기 (없으면 빈 배열)
+        let posts = JSON.parse(localStorage.getItem('myBoardPosts')) || [];
+
+        // 4. 새 글 ID 생성 (가장 큰 ID + 1)
+        const newId = posts.length > 0 ? Math.max(...posts.map(p => p.id)) + 1 : 1;
+
+        // 5. 새 글 객체 만들기
+        const newPost = {
+          id: newId,
+          title: title,
+          content: content,
+          username: username,
+          newdate: newdate,
+          viewcount: 0,
+          likecount: 0
+        };
+
+        // 6. 목록에 추가하고 저장하기
+        posts.push(newPost);
+        localStorage.setItem('myBoardPosts', JSON.stringify(posts));
+
+        // 7. 완료 메시지 및 이동
+        alert("글이 저장되었습니다!");
+        location.href = "board_list.html"; 
+      }
+    </script>
   </body>
 </html>

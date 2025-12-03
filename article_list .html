@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
   <head>
-    <meta charset="UTF-8" />
-    <title>블로그 게시판</title>
+    <meta charset="utf-8" />
+    <title>블로그 게시판 (Article)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
   </head>
   <body>
     <div class="container">
-      <h1 class="mt-5">블로그 게시판</h1>
+      <div class="d-flex justify-content-between align-items-center mt-5">
+          <h1>블로그 게시판 (Article)</h1>
+          <a href="index.html" class="btn btn-secondary">홈으로 돌아가기</a>
+      </div>
 
       <div class="mt-5">
         <h2>게시글 목록</h2>
@@ -24,43 +24,20 @@
               <th>관리</th>
             </tr>
           </thead>
-          <tbody>
-            <tr th:each="article : ${articles}">
-              <td th:text="${article.id}"></td>
-              <td th:text="${article.title}"></td>
-              <td th:text="${article.content}"></td>
-              <td>
-                <a
-                  th:href="@{/article_edit/{id}(id=${article.id})}"
-                  class="btn btn-warning btn-sm"
-                  >수정</a
-                >
-                <form
-                  th:action="@{/api/article_delete/{id}(id=${article.id})}"
-                  method="post"
-                  style="display: inline"
-                >
-                  <input type="hidden" name="_method" value="delete" />
-                  <button type="submit" class="btn btn-danger btn-sm">
-                    삭제
-                  </button>
-                </form>
-              </td>
-            </tr>
-          </tbody>
+          <tbody id="articleList">
+            </tbody>
         </table>
       </div>
 
-      <div class="mt-4">
+      <div class="mt-4 mb-5">
         <h2>게시글 추가</h2>
-        <form th:action="@{/api/articles}" method="post">
+        <form onsubmit="addArticle(event)">
           <div class="form-group">
             <label for="title">제목:</label>
             <input
               type="text"
               class="form-control"
               id="title"
-              name="title"
               required
             />
           </div>
@@ -69,14 +46,85 @@
             <textarea
               class="form-control"
               id="content"
-              name="content"
               rows="5"
               required
             ></textarea>
           </div>
-          <button type="submit" class="btn btn-primary">추가</button>
+          <button type="submit" class="btn btn-primary mt-2">추가</button>
         </form>
       </div>
     </div>
+
+    <script>
+      // 1. 화면 로딩 시 목록 불러오기
+      window.onload = function() {
+        renderTable();
+      };
+
+      function renderTable() {
+        const posts = JSON.parse(localStorage.getItem('myArticles')) || [];
+        const tbody = document.getElementById('articleList');
+        let html = '';
+
+        if (posts.length === 0) {
+            html = '<tr><td colspan="4" class="text-center">등록된 게시글이 없습니다.</td></tr>';
+        } else {
+            // 최신순(역순)으로 보여주기
+            posts.slice().reverse().forEach(post => {
+                html += `
+                    <tr>
+                        <td>${post.id}</td>
+                        <td>${post.title}</td>
+                        <td>${post.content}</td>
+                        <td>
+                            <a href="article_edit.html?id=${post.id}" class="btn btn-warning btn-sm">수정</a>
+                            
+                            <button onclick="deleteArticle(${post.id})" class="btn btn-danger btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        tbody.innerHTML = html;
+      }
+
+      // 2. 글 추가 함수
+      function addArticle(event) {
+        event.preventDefault(); // 새로고침 방지
+
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+
+        let posts = JSON.parse(localStorage.getItem('myArticles')) || [];
+        
+        // 새 ID 생성
+        const newId = posts.length > 0 ? Math.max(...posts.map(p => p.id)) + 1 : 1;
+
+        posts.push({
+            id: newId,
+            title: title,
+            content: content
+        });
+
+        localStorage.setItem('myArticles', JSON.stringify(posts));
+        
+        alert("추가되었습니다!");
+        
+        // 입력창 비우기 및 목록 다시 그리기
+        document.getElementById('title').value = '';
+        document.getElementById('content').value = '';
+        renderTable();
+      }
+
+      // 3. 글 삭제 함수
+      function deleteArticle(id) {
+        if(confirm('정말 삭제하시겠습니까?')) {
+            let posts = JSON.parse(localStorage.getItem('myArticles')) || [];
+            posts = posts.filter(p => p.id !== id);
+            localStorage.setItem('myArticles', JSON.stringify(posts));
+            renderTable(); // 목록 갱신
+        }
+      }
+    </script>
   </body>
 </html>

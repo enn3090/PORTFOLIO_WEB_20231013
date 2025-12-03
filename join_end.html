@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <title>회원 가입 완료</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="img/favicon.ico" rel="icon"> 
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -21,14 +22,12 @@
   <body>
     <div class="container center-content">
       <div class="text-center">
-        <!-- 회원가입 완료 메시지 -->
         <h1 class="mb-4 text-success display-4">회원 가입이 완료되었습니다!</h1>
         <p class="lead mb-5">
           환영합니다! 이제 블로그 서비스를 자유롭게 이용하실 수 있습니다.
         </p>
 
-        <!-- 메인 페이지로 돌아가기 버튼 -->
-        <a th:href="@{/}" class="btn btn-primary btn-lg shadow-sm">
+        <a href="index.html" class="btn btn-primary btn-lg shadow-sm">
           메인 페이지로 이동
         </a>
       </div>
