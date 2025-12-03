@@ -31,8 +31,9 @@ Bootstrap으로 반응형 포트폴리오 메인 페이지 제작
 9. ![나의 프로젝트 페이지](https://github.com/user-attachments/assets/9b0e441d-283e-4c85-91bd-8819f02b42c6)
 10. 메일 보내기 버튼 구현
 ![메일 보내기](https://github.com/user-attachments/assets/053bd84b-5206-409e-a14c-358102dc8d72)
+(https://github.com/user-attachments/assets/40380d73-092c-4f1b-87c6-1f7e09383c3e)
 
-11. ![지도 삽입 완료](https://github.com/user-attachments/assets/57827982-8369-4162-a9f2-94191e54cb32)
+12. ![지도 삽입 완료](https://github.com/user-attachments/assets/57827982-8369-4162-a9f2-94191e54cb32)
 
 ![프로젝트에 사용된 기술 스택](https://github.com/user-attachments/assets/a2921a91-76bc-4153-a4dd-f8afc9d5aec8)
 
