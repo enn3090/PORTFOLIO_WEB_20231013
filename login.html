@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <title>로그인</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="img/favicon.ico" rel="icon">
@@ -10,19 +10,16 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
     <style>
-      /* 로그인 폼을 화면 중앙에 배치하기 위한 스타일 */
       .login-container {
-        max-width: 400px; /* 최대 너비 제한 */
-        margin: 100px auto; /* 상하 여백 100px, 좌우 중앙 정렬 */
+        max-width: 400px;
+        margin: 100px auto;
         padding: 30px;
-        border: 1px solid #ddd; /* 테두리 추가 */
-        border-radius: 10px; /* 모서리 둥글게 */
-        background-color: #fff; /* 배경색 흰색 */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
-      body {
-        background-color: #f8f9fa; /* 배경색 설정 */
-      }
+      body { background-color: #f8f9fa; }
     </style>
   </head>
   <body>
@@ -38,10 +35,10 @@
           <div class="form-group">
             <label for="email">아이디(이메일)</label>
             <input
-              type="email"
+              type="text"
               class="form-control"
               id="email"
-              placeholder="이메일을 입력하세요"
+              placeholder="admin@test.com"
               required
             />
           </div>
@@ -52,30 +49,19 @@
               type="password"
               class="form-control"
               id="password"
-              placeholder="비밀번호를 입력하세요"
+              placeholder="1234"
               required
             />
           </div>
 
           <div class="form-group form-check">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="remember-me"
-            />
-            <label class="form-check-label" for="remember-me"
-              >로그인 상태 유지</label
-            >
+            <input type="checkbox" class="form-check-input" id="remember-me" />
+            <label class="form-check-label" for="remember-me">로그인 상태 유지</label>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-block">
-            로그인
-          </button>
+          <button type="submit" class="btn btn-primary btn-block">로그인</button>
 
-          <a href="join_new.html" class="btn btn-secondary btn-block mt-2"
-            >회원가입</a
-          >
-          
+          <a href="join_new.html" class="btn btn-secondary btn-block mt-2">회원가입</a>
           <a href="index.html" class="btn btn-link btn-block mt-1">홈으로 돌아가기</a>
         </form>
       </div>
@@ -89,8 +75,10 @@
         const password = document.getElementById('password').value;
         const errorMsg = document.getElementById('error-msg');
 
-        // 1. 관리자 계정 (테스트용)
+        // 1. 관리자 계정 테스트 (admin@test.com / 1234)
         if (email === "admin@test.com" && password === "1234") {
+            const adminUser = { name: "관리자", email: email };
+            localStorage.setItem('currentUser', JSON.stringify(adminUser));
             alert("관리자님 환영합니다!");
             location.href = "board_list.html";
             return;
@@ -101,10 +89,10 @@
         const validUser = users.find(u => u.email === email && u.password === password);
 
         if (validUser) {
-            alert(validUser.name + "님 환영합니다!");
-            // 로그인 정보 저장 (선택 사항)
+            // 로그인 정보 저장 (매우 중요!)
             localStorage.setItem('currentUser', JSON.stringify(validUser));
-            location.href = "board_list.html"; // 로그인 성공 시 게시판으로 이동
+            alert(validUser.name + "님 환영합니다!");
+            location.href = "board_list.html"; 
         } else {
             // 로그인 실패
             errorMsg.style.display = "block";

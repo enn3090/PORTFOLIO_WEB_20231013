@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <title>메일 전송 완료</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="img/favicon.ico" rel="icon">
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
+    <style>
+        .center-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+    </style>
   </head>
   <body>
-    <div class="container text-center mt-5">
-      <h1 class="mb-4 text-success display-4">
-        메일 전송(파일 업로드)가 완료되었습니다!
-      </h1>
-      <p class="lead mb-5">보내주신 내용은 담당자가 확인 후 연락드리겠습니다.</p>
-      
+    <div class="container center-screen">
+      <h1 class="text-success mb-4">메일 전송이 완료되었습니다!</h1>
+      <p class="lead mb-5">보내주신 소중한 의견 감사합니다.<br>담당자가 확인 후 빠른 시일 내에 답변드리겠습니다.</p>
       <a href="index.html" class="btn btn-primary btn-lg">홈으로 돌아가기</a>
     </div>
   </body>
