@@ -12,6 +12,7 @@
   </head>
   <body>
     <div class="container">
+      <!-- 상단 헤더 -->
       <div class="d-flex justify-content-between align-items-center mt-4 p-3 border rounded bg-light">
         <h1 class="m-0"><a href="index.html" style="text-decoration:none; color:inherit;">블로그 게시판(new)</a></h1>
         <div class="text-right">
@@ -20,6 +21,7 @@
         </div>
       </div>
 
+      <!-- 검색창 -->
       <form class="mt-4" onsubmit="alert('검색 기능은 데모 버전에서 지원하지 않습니다.'); return false;">
         <div class="input-group">
           <input type="text" class="form-control" placeholder="검색어 입력..." />
@@ -27,6 +29,7 @@
         </div>
       </form>
 
+      <!-- 게시글 목록 -->
       <div class="mt-5">
         <table class="table table-hover">
           <thead class="thead-dark">
@@ -40,17 +43,21 @@
             </tr>
           </thead>
           <tbody id="boardData">
-            </tbody>
+            <!-- 자바스크립트가 여기에 글을 채웁니다 -->
+          </tbody>
         </table>
       </div>
 
+      <!-- 글쓰기 버튼 -->
       <div class="text-right mb-3">
         <button class="btn btn-warning" onclick="goToWrite()">글쓰기</button>
       </div>
 
+      <!-- 페이지네이션 -->
       <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center" id="pagination">
-          </ul>
+          <!-- 자바스크립트가 번호를 채웁니다 -->
+        </ul>
       </nav>
     </div>
 
@@ -108,23 +115,50 @@
         }
       }
 
-      // 4. 데이터 불러오기 및 초기화
+      // 4. 데이터 불러오기 (샘플 데이터 수정됨!)
       function loadPosts() {
         posts = JSON.parse(localStorage.getItem('myBoardPosts')) || [];
 
-        // 데이터가 없으면 샘플 데이터 왕창 생성 (페이지네이션 테스트용)
+        // 데이터가 하나도 없을 때만 샘플 데이터 생성
         if (posts.length === 0) {
-           for(let i=1; i<=12; i++) {
-             posts.push({ 
-               id: i, 
-               title: "테스트 게시글 " + i, 
-               username: "관리자", 
+           posts = [
+             { 
+               id: 4, 
+               title: "[개발 환경] Java Spring Boot 개발 환경 설정하기", 
+               username: "이영현", 
                newdate: "2025-12-03", 
-               viewcount: i*10, 
-               likecount: i,
-               content: "내용입니다."
-             });
-           }
+               viewcount: 42, 
+               likecount: 5, 
+               content: "1. JDK 설치\n- Spring Boot 3.x 버전을 위해 JDK 17 이상을 설치합니다.\n\n2. IDE 설치 (IntelliJ IDEA)\n- Ultimate 버전 학생 라이센스 등록 완료\n- Lombok 플러그인 활성화\n\n3. 프로젝트 생성\n- Spring Initializr 사용\n- Dependencies: Spring Web, Thymeleaf, Lombok, DevTools 추가\n\n이제 본격적으로 개발을 시작할 준비가 끝났습니다!" 
+             },
+             { 
+               id: 3, 
+               title: "[자격증] SQLD 핵심 요약 정리 (데이터 모델링 & SQL)", 
+               username: "이영현", 
+               newdate: "2025-12-02", 
+               viewcount: 128, 
+               likecount: 15, 
+               content: "1. 데이터 모델링의 이해\n- 엔터티(Entity), 속성(Attribute), 관계(Relationship)의 정의\n- 정규화(Normalization): 1차, 2차, 3차 정규화의 특징\n\n2. SQL 기본 및 활용\n- SELECT 문의 실행 순서: FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY\n- JOIN의 종류: Inner, Outer, Left, Right Join\n- 서브쿼리와 윈도우 함수 활용법\n\n이번 시험 합격을 목표로 화이팅!" 
+             },
+             { 
+               id: 2, 
+               title: "[회고] 개인 포트폴리오 웹사이트 제작기", 
+               username: "이영현", 
+               newdate: "2025-12-01", 
+               viewcount: 55, 
+               likecount: 8, 
+               content: "Spring Boot로 만들었던 프로젝트를 GitHub Pages로 배포하는 과정에서 많은 것을 배웠습니다.\n특히 동적 서버 기능을 자바스크립트 LocalStorage로 대체하는 과정이 흥미로웠습니다." 
+             },
+             { 
+               id: 1, 
+               title: "첫 번째 게시글입니다.", 
+               username: "관리자", 
+               newdate: "2025-11-30", 
+               viewcount: 10, 
+               likecount: 2, 
+               content: "환영합니다! 게시판 기능이 정상 작동합니다." 
+             }
+           ];
            localStorage.setItem('myBoardPosts', JSON.stringify(posts));
         }
 
