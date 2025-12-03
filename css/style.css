@@ -297,6 +297,15 @@
     padding-bottom: 30px !important;
 }
 
+/* ★★★ 이미지 사이즈 통일 CSS 추가 ★★★ */
+.project-thumbnail {
+    height: 250px; /* 모든 이미지를 250px 높이로 통일 */
+    width: 100%;
+    /* 가로/세로 비율을 유지하며 지정된 공간을 채우고, 넘치는 부분은 잘라냄 */
+    object-fit: cover; 
+}
+/* ★★★ 이미지 사이즈 통일 CSS 추가 끝 ★★★ */
+
 
 /*** Team ***/
 .team-item img {
@@ -427,4 +436,12 @@
 
 .testimonial-carousel .owl-dot.active::after {
     background: var(--primary);
+}
+
+/* 데모 이미지 사이즈 통일 CSS 추가 */
+.demo-thumbnail {
+    height: 200px; /* 프로젝트 갤러리보다 약간 작은 높이로 설정 (예: 200px) */
+    width: 100%;
+    /* 가로/세로 비율 유지하며 지정된 공간을 꽉 채우도록 설정 */
+    object-fit: cover; 
 }
