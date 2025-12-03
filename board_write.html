@@ -1,91 +1,152 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <title>블로그 게시판 - 글쓰기</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="img/favicon.ico" rel="icon">
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-  </head>
-  <body>
-    <div class="container">
-      <div class="mt-4">
-        <h2>게시글 추가(제목과 내용 입력)</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글쓰기 - 블로그 게시판</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>게시글 작성 (파일 업로드 포함)</h2>
         
         <form onsubmit="savePost(event)">
-          <div class="form-group">
-            <label for="title">제목: </label>
-            <input
-              type="text"
-              class="form-control"
-              id="title"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="content">내용: </label>
-            <textarea
-              class="form-control"
-              id="content"
-              rows="10"
-              required
-            ></textarea>
-          </div>
+            
+            <div class="form-group">
+                <label>작성자</label>
+                <input type="text" id="username" class="form-control" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>제목</label>
+                <input type="text" id="title" class="form-control" placeholder="제목을 입력하세요" required>
+            </div>
 
-          <input type="hidden" id="username" value="방문자" />
+            <div class="form-group">
+                <label>내용</label>
+                <textarea id="content" class="form-control" rows="10" placeholder="내용을 입력하세요" required></textarea>
+            </div>
 
-          <div class="mt-3">
-            <button type="submit" class="btn btn-primary">글 저장하기</button>
-            <a href="board_list.html" class="btn btn-secondary">취소</a>
-          </div>
+            <div class="form-group p-3 border rounded bg-light">
+                <label><strong>첨부 파일</strong> (다중 선택 가능)</label>
+                <input type="file" id="fileInput" class="form-control-file" multiple onchange="handleFileSelect()">
+                <small class="text-muted d-block mt-1">※ 같은 이름의 파일은 자동으로 '파일명(1)'과 같이 변경되어 저장됩니다.</small>
+                
+                <ul id="fileListDisplay" class="mt-3 list-group"></ul>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">저장하기</button>
+                <a href="board_list.html" class="btn btn-secondary">취소</a>
+            </div>
         </form>
-      </div>
     </div>
 
     <script>
-      function savePost(event) {
-        event.preventDefault(); // 페이지 새로고침 방지
+        // 파일 정보를 담을 배열
+        let selectedFiles = [];
 
-        // 1. 입력한 내용 가져오기
-        const title = document.getElementById('title').value;
-        const content = document.getElementById('content').value;
-        const username = document.getElementById('username').value;
-        
-        // 2. 오늘 날짜 생성 (YYYY-MM-DD)
-        const dateObj = new Date();
-        const year = dateObj.getFullYear();
-        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const day = String(dateObj.getDate()).padStart(2, '0');
-        const newdate = `${year}-${month}-${day}`;
-
-        // 3. 기존 글 목록 불러오기 (없으면 빈 배열)
-        let posts = JSON.parse(localStorage.getItem('myBoardPosts')) || [];
-
-        // 4. 새 글 ID 생성 (가장 큰 ID + 1)
-        const newId = posts.length > 0 ? Math.max(...posts.map(p => p.id)) + 1 : 1;
-
-        // 5. 새 글 객체 만들기
-        const newPost = {
-          id: newId,
-          title: title,
-          content: content,
-          username: username,
-          newdate: newdate,
-          viewcount: 0,
-          likecount: 0
+        window.onload = function() {
+            checkSession(); // 페이지 켜자마자 로그인 확인
         };
 
-        // 6. 목록에 추가하고 저장하기
-        posts.push(newPost);
-        localStorage.setItem('myBoardPosts', JSON.stringify(posts));
+        // [기능 1] 세션 체크 (로그인 안했으면 쫓아내고, 했으면 이름 박기)
+        function checkSession() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                alert("로그인이 필요한 서비스입니다.");
+                location.href = "login.html";
+            } else {
+                // 로그인한 사용자 이름(user.name)을 작성자 칸에 넣기
+                document.getElementById('username').value = user.name;
+            }
+        }
 
-        // 7. 완료 메시지 및 이동
-        alert("글이 저장되었습니다!");
-        location.href = "board_list.html"; 
-      }
+        // [기능 2] 파일 선택 및 중복 이름 변경 로직 (PPT 핵심 요구사항)
+        function handleFileSelect() {
+            const fileInput = document.getElementById('fileInput');
+            const files = Array.from(fileInput.files);
+            const listDisplay = document.getElementById('fileListDisplay');
+            
+            // 기존 게시글들의 파일 이름 수집 (서버에 있는 파일이라 가정)
+            const allPosts = JSON.parse(localStorage.getItem('myBoardPosts')) || [];
+            let existingNames = [];
+            allPosts.forEach(p => {
+                if(p.files) p.files.forEach(f => existingNames.push(f.name));
+            });
+
+            listDisplay.innerHTML = ""; 
+            selectedFiles = [];
+
+            files.forEach(file => {
+                let finalName = file.name;
+                let count = 1;
+
+                // ★ 중복 검사 반복문 (파일명, 파일명(1), 파일명(2)...)
+                while (
+                    existingNames.includes(finalName) || 
+                    selectedFiles.some(f => f.name === finalName)
+                ) {
+                    let nameParts = file.name.split('.');
+                    if(nameParts.length > 1) {
+                        const ext = nameParts.pop(); 
+                        const base = nameParts.join('.'); 
+                        finalName = `${base}(${count}).${ext}`;
+                    } else {
+                        finalName = `${file.name}(${count})`;
+                    }
+                    count++;
+                }
+
+                // 처리된 파일 저장
+                selectedFiles.push({
+                    name: finalName,
+                    originalName: file.name
+                });
+
+                // 화면에 표시
+                let li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                li.innerHTML = `
+                    <span>${finalName}</span>
+                    ${file.name !== finalName ? '<span class="badge badge-warning">중복방지 이름변경됨</span>' : ''}
+                `;
+                listDisplay.appendChild(li);
+            });
+        }
+
+        // [기능 3] 글 저장
+        function savePost(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const username = document.getElementById('username').value;
+
+            // 날짜 생성
+            const date = new Date();
+            const newdate = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+
+            let posts = JSON.parse(localStorage.getItem('myBoardPosts')) || [];
+            const newId = posts.length > 0 ? Math.max(...posts.map(p => p.id)) + 1 : 1;
+
+            const newPost = {
+                id: newId,
+                title: title,
+                content: content,
+                username: username,
+                newdate: newdate,
+                viewcount: 0,
+                likecount: 0,
+                files: selectedFiles // 파일 정보도 같이 저장
+            };
+
+            posts.push(newPost);
+            localStorage.setItem('myBoardPosts', JSON.stringify(posts));
+
+            alert("게시글과 파일이 저장되었습니다!");
+            location.href = "board_list.html"; 
+        }
     </script>
-  </body>
+</body>
 </html>
